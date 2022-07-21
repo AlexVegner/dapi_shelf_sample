@@ -9,7 +9,14 @@ https://www.youtube.com/watch?v=IRZ7WH98lLA
 https://github.com/igrigorik/heroku-buildpack-dart/issues/54#issuecomment-1137209312
 
 
-Commands: 
+
+### Setup Heroku
+https://devcenter.heroku.com/articles/getting-started-with-go#set-up
+```
+brew install heroku/brew/heroku
+heroku login
+```
+### Setup project Commands: 
 ```sh
 git init
 heroku create <app_id>

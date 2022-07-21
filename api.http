@@ -31,7 +31,7 @@ POST {{BASE_URL}}/api/v1/auth/signup
 Content-Type: application/json
 
 {   
-    "login": "alex7",
+    "login": "alex8",
     "password": "123"
 }
 

@@ -17,6 +17,7 @@ docker-compose up
 ```
 
 # To do list
+- Create error handler middleware
 - Create model field validator package
 - Write simple ORM for Postgress
 - Optimize Postgree pool to Serverless (Cloud Functions)
@@ -27,3 +28,4 @@ docker-compose up
 - Deploy on Azure Cloud
 - Deploy Serverless Functions on Kubernetes
 - Dart API Contract generator
+- Create reactive shalf router
