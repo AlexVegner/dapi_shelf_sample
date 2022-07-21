@@ -31,4 +31,30 @@ Router appRouter() {
 
   app.all('/<name|.*>', fallback('public/index.html'));
   return app;
+
+  // // Cascade style
+  // return Router()
+  //   ..mount(
+  //     '/api/v1',
+  //     Router()
+  //       ..mount(
+  //         '/',
+  //         Pipeline()
+  //             .addMiddleware(getIt<AuthMiddleware>().middleware())
+  //             .addHandler(
+  //               Router()
+  //                 ..mount('/', getIt<UserController>().router)
+  //                 ..mount('/', getIt<DraftController>().router)
+  //                 ..mount('/', getIt<EventController>().router)
+  //                 ..all(
+  //                   '/<ignore|.*>',
+  //                   (Request r) => Response.notFound(
+  //                     jsonEncode({'message': 'Route not defined'}),
+  //                   ),
+  //                 ),
+  //             ),
+  //       ),
+  //   )
+  //   ..mount('/assets/', StaticAssetsApi(path: 'public').router)
+  //   ..all('/<name|.*>', fallback('public/index.html'));
 }
