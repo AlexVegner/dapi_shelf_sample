@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  db:
+    image: 'postgres:latest'
+    restart: always
+    # environment:
+    #   - POSTGRES_USER=postgres
+    #   - POSTGRES_PASSWORD=postgres
+    #   - POSTGRES_DB=daylog
+    environment:
+      POSTGRES_USER: postgres # The PostgreSQL user (useful to connect to the database)
+      POSTGRES_PASSWORD: postgres # The PostgreSQL password (useful to connect to the database)
+      POSTGRES_DB: daylog # The PostgreSQL default database (automatically created at first launch)
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+      # copy the sql script to create tables
+      - ./sql/00-create-table.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      # copy the sql script to fill tables
+      - ./sql/01-insert-records.sql:/docker-entrypoint-initdb.d/fill_tables.sql
+  api:
+    container_name: day-log-api
+    build:
+      context: ./
+      # target: production
+    image: day-log-api
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: postgres
+    links:
+      - db
+    volumes:
+      - './:/src'
+volumes:
+  db:
+    driver: local

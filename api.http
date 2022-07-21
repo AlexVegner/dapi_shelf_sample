@@ -1,0 +1,160 @@
+
+@BASE_URL=http://localhost:8081
+# @BASE_URL=http://localhost:8080
+
+# Heroku
+# @BASE_URL=https://daylog-app.herokuapp.com
+
+# Cloud Run
+# @BASE_URL=https://day-log-weavxpuaiq-lm.a.run.app
+
+
+@LOGIN_ALEX=alex
+
+@TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyZGJlZGU2LWI5M2UtNDRkYS04NGU0LTc5YzczMTQxYTkwYSIsImlhdCI6MTY1NzgwMDUxMCwiZXhwIjoxNjU3ODA0MTEwLCJpc3MiOiJodHRwczovL2dpdGh1Yi5jb20vZGF5bG9nL2RheWxvZyIsImp0aSI6IjEyZGJlZGU2LWI5M2UtNDRkYS04NGU0LTc5YzczMTQxYTkwYSJ9.7RoXBU-kPpd6d1OhKL6KU9BY9UU3wnJ1EcCYWj8Ij5g
+# @TOKEN=login=alex6
+# @TOKEN=uid=26c6381b-8b75-4302-bb32-d32fbd677666
+# @TOKEN=login=max
+@TOKEN_KSENIYA=?
+
+### Login
+POST {{BASE_URL}}/api/v1/auth/login
+Content-Type: application/json
+
+{   
+    "login": "alex6",
+    "password": "123"
+}
+
+### Signup
+POST {{BASE_URL}}/api/v1/auth/signup
+Content-Type: application/json
+
+{   
+    "login": "alex6",
+    "password": "123"
+}
+
+
+### Get me
+GET {{BASE_URL}}/api/v1/me
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+### Update me
+PUT {{BASE_URL}}/api/v1/me
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+{   
+    "login": "alex",
+    "password": "123"
+}
+
+### Delete me
+DELETE {{BASE_URL}}/api/v1/me
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+
+### Drafts 
+
+### Get draft list 
+GET {{BASE_URL}}/api/v1/drafts
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+
+### Get draft by id 
+GET {{BASE_URL}}/api/v1/drafts/d78a8f68-ee56-48a4-8db5-470868caf0bd
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+
+### Create draft
+POST {{BASE_URL}}/api/v1/drafts
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+{   
+  "startDate": "2022-07-03",
+  "endDate": "2022-08-03",
+  "startAt": "2022-07-03 19:10:25",
+  "duration": 60,
+  "days": 0,
+  "title": "Task",
+  "detail": "details"
+}
+
+
+
+### Update draft
+PUT {{BASE_URL}}/api/v1/drafts/19e740bc-0bdf-4b6f-9c13-0f837afe9ecd
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+{   
+  "startDate": "2022-01-03",
+  "endDate": "2022-08-03",
+  "startAt": "2022-07-03 19:10:25",
+  "duration": 60,
+  "days": 0,
+  "title": "Task",
+  "detail": "details2"
+}
+
+
+### DELETE user
+DELETE {{BASE_URL}}/api/v1/drafts/d78a8f68-ee56-48a4-8db5-470868caf0bd
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+
+### Events 
+
+### Get events list 
+GET {{BASE_URL}}/api/v1/events?date=2022-08-03
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+
+### Get events by id 
+GET {{BASE_URL}}/api/v1/events/3c73497e-3463-4e2c-be5f-8692d131e289
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+
+### Create event
+POST {{BASE_URL}}/api/v1/events
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+{   
+  "startDate": "2022-08-03",
+  "startAt": "2022-07-03 19:10:25",
+  "duration": 60,
+  "title": "Task",
+  "detail": "details2",
+  "comment": "hello"
+}
+
+### Update event
+PUT {{BASE_URL}}/api/v1/events/3c73497e-3463-4e2c-be5f-8692d131e289
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+{   
+  "startDate": "2022-08-08",
+  "startAt": "2022-07-03 19:10:25",
+  "duration": 30,
+  "status": "progress",
+  "days": 0,
+  "title": "Task",
+  "detail": "details2"
+}
+
+
+### DELETE event
+DELETE {{BASE_URL}}/api/v1/events/3c73497e-3463-4e2c-be5f-8692d131e289
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
