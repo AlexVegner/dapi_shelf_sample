@@ -28,4 +28,4 @@ docker-compose up
 - Deploy on Azure Cloud
 - Deploy Serverless Functions on Kubernetes
 - Dart API Contract generator
-- Create reactive shalf router
+- Create reactive shelf router
