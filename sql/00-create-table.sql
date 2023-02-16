@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS events (
     id uuid DEFAULT uuid_generate_v4 (),
     user_id uuid NOT NULL,
-    draft_id uuid NOT NULL,
+    draft_id uuid,
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     start_date DATE NOT NULL,
     start_at TIMESTAMP NOT NULL,
