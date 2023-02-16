@@ -17,4 +17,12 @@ extension ResponseX on Response {
       Map<String, String> errors = const {'not_found': 'Item not found'}}) {
     return Response(status, body: jsonEncode({'errors': errors}));
   }
+
+  static Response invalidRequest(
+      {int status = 400,
+      Map<String, String> errors = const {
+        'invalid_request': 'Invalid Request'
+      }}) {
+    return Response(status, body: jsonEncode({'errors': errors}));
+  }
 }

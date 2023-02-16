@@ -12,3 +12,9 @@ ptest-heroku:
 
 deploy-cloud-run:
 	sh ./scripts/deploy-cloud-run.sh
+
+compose: 
+	docker compose up
+
+
+

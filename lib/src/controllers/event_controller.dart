@@ -20,56 +20,81 @@ class EventController {
   }
 
   Future<Response> list(Request request) async {
-    final date = request.url.queryParameters['date'];
-    final uid = request.uid!;
-    if (date != null) {
-      final docs = await eventService.listWithDate(uid: uid, date: date);
+    try {
+      final date = request.url.queryParameters['date'];
+      final uid = request.uid!;
+      if (date != null) {
+        final docs = await eventService.listWithDate(uid: uid, date: date);
+        return ResponseX.jsonList(docs);
+      }
+      final docs = await eventService.list(uid: uid);
       return ResponseX.jsonList(docs);
+    } catch (e) {
+      log.severe('__error__', e);
+      return ResponseX.invalidRequest();
     }
-    final docs = await eventService.list(uid: uid);
-    return ResponseX.jsonList(docs);
   }
 
   Future<Response> byId(Request request, String id) async {
-    final uid = request.uid!;
-    final event = await eventService.byId(id, uid: uid);
-    if (event != null) {
-      return ResponseX.json(event);
-    } else {
-      return ResponseX.notFound();
+    try {
+      final uid = request.uid!;
+      final event = await eventService.byId(id, uid: uid);
+      if (event != null) {
+        return ResponseX.json(event);
+      } else {
+        return ResponseX.notFound();
+      }
+    } catch (e) {
+      log.severe('__error__', e);
+      return ResponseX.invalidRequest();
     }
   }
 
   Future<Response> create(Request request) async {
-    final uid = request.uid!;
-    final body = await request.readAsString();
-    final json = jsonDecode(body);
-    json['userId'] = uid;
-    final newEvent = Event.fromJson(json);
-    final createdEvent = await eventService.create(newEvent);
-    return ResponseX.json(createdEvent);
+    try {
+      final uid = request.uid!;
+      final body = await request.readAsString();
+      final json = jsonDecode(body);
+      json['userId'] = uid;
+      final newEvent = Event.fromJson(json);
+      final createdEvent = await eventService.create(newEvent);
+      return ResponseX.json(createdEvent);
+    } catch (e) {
+      log.severe('__error__', e);
+      return ResponseX.invalidRequest();
+    }
   }
 
   Future<Response> update(Request request, String id) async {
-    final uid = request.uid!;
-    final body = await request.readAsString();
-    final json = jsonDecode(body);
-    json['id'] = id;
-    json['userId'] = uid;
-    final newEvent = Event.fromJson(json);
-    final updatedEvent = await eventService.update(newEvent);
-    if (updatedEvent == null) {
-      return ResponseX.notFound();
+    try {
+      final uid = request.uid!;
+      final body = await request.readAsString();
+      final json = jsonDecode(body);
+      json['id'] = id;
+      json['userId'] = uid;
+      final newEvent = Event.fromJson(json);
+      final updatedEvent = await eventService.update(newEvent);
+      if (updatedEvent == null) {
+        return ResponseX.notFound();
+      }
+      return ResponseX.json(updatedEvent);
+    } catch (e) {
+      log.severe('__error__', e);
+      return ResponseX.invalidRequest();
     }
-    return ResponseX.json(updatedEvent);
   }
 
   Future<Response> delete(Request request, String id) async {
-    final uid = request.uid!;
-    final result = await eventService.delete(id, uid: uid);
-    if (result > 0) {
-      return Response(204);
+    try {
+      final uid = request.uid!;
+      final result = await eventService.delete(id, uid: uid);
+      if (result > 0) {
+        return Response(204);
+      }
+      return ResponseX.notFound();
+    } catch (e) {
+      log.severe('__error__', e);
+      return ResponseX.invalidRequest();
     }
-    return ResponseX.notFound();
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dapi_shelf_sample/src/common/extensions/response_ext.dart';
+import 'package:dapi_shelf_sample/src/common/log.dart';
 import 'package:dapi_shelf_sample/src/models/token.dart';
 import 'package:dapi_shelf_sample/src/models/user.dart';
 import 'package:dapi_shelf_sample/src/services/user_service.dart';
@@ -21,22 +22,32 @@ class AuthController {
 
   Future<Response> login(Request request) async {
     final body = await request.readAsString();
-    final json = jsonDecode(body);
-    final user = User.fromJson(json);
 
-    final dbuser = await userService.byLogin(user.login);
-    if (dbuser?.id != null && user.password == dbuser?.password) {
-      return ResponseX.json(Token.create(dbuser!.id!));
-    } else {
-      return Response(401);
+    try {
+      final json = jsonDecode(body);
+      final user = User.fromJson(json);
+      final dbuser = await userService.byLogin(user.login);
+      if (dbuser?.id != null && user.password == dbuser?.password) {
+        return ResponseX.json(Token.create(dbuser!.id!));
+      } else {
+        return Response(401);
+      }
+    } catch (e) {
+      log.severe('__error__', e);
+      return ResponseX.invalidRequest();
     }
   }
 
   Future<Response> signup(Request request) async {
-    final body = await request.readAsString();
-    final json = jsonDecode(body);
-    final newUser = User.fromJson(json);
-    final createdUser = await userService.create(newUser);
-    return Response.ok(jsonEncode(createdUser.toJsonWithoutPassword()));
+    try {
+      final body = await request.readAsString();
+      final json = jsonDecode(body);
+      final newUser = User.fromJson(json);
+      final createdUser = await userService.create(newUser);
+      return Response.ok(jsonEncode(createdUser.toJsonWithoutPassword()));
+    } catch (e) {
+      log.severe('__error__', e);
+      return ResponseX.invalidRequest();
+    }
   }
 }

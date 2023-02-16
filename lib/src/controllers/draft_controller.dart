@@ -20,9 +20,14 @@ class DraftController {
   }
 
   Future<Response> list(Request request) async {
-    final uid = request.uid!;
-    final drafts = await draftService.list(uid: uid);
-    return ResponseX.jsonList(drafts);
+    try {
+      final uid = request.uid!;
+      final drafts = await draftService.list(uid: uid);
+      return ResponseX.jsonList(drafts);
+    } catch (e) {
+      log.severe('__error__', e);
+      return ResponseX.invalidRequest();
+    }
   }
 
   Future<Response> byId(Request request, String id) async {
@@ -36,35 +41,50 @@ class DraftController {
   }
 
   Future<Response> create(Request request) async {
-    final uid = request.uid!;
-    final body = await request.readAsString();
-    final json = jsonDecode(body);
-    json['userId'] = uid;
-    final newDraft = Draft.fromJson(json);
-    final createdDraft = await draftService.create(newDraft);
-    return ResponseX.json(createdDraft);
+    try {
+      final uid = request.uid!;
+      final body = await request.readAsString();
+      final json = jsonDecode(body);
+      json['userId'] = uid;
+      final newDraft = Draft.fromJson(json);
+      final createdDraft = await draftService.create(newDraft);
+      return ResponseX.json(createdDraft);
+    } catch (e) {
+      log.severe('__error__', e);
+      return ResponseX.invalidRequest();
+    }
   }
 
   Future<Response> update(Request request, String id) async {
-    final uid = request.uid!;
-    final body = await request.readAsString();
-    final json = jsonDecode(body);
-    json['id'] = id;
-    json['userId'] = uid;
-    final newDraft = Draft.fromJson(json);
-    final updateDraft = await draftService.update(newDraft);
-    if (updateDraft == null) {
-      return ResponseX.notFound();
+    try {
+      final uid = request.uid!;
+      final body = await request.readAsString();
+      final json = jsonDecode(body);
+      json['id'] = id;
+      json['userId'] = uid;
+      final newDraft = Draft.fromJson(json);
+      final updateDraft = await draftService.update(newDraft);
+      if (updateDraft == null) {
+        return ResponseX.notFound();
+      }
+      return ResponseX.json(updateDraft);
+    } catch (e) {
+      log.severe('__error__', e);
+      return ResponseX.invalidRequest();
     }
-    return ResponseX.json(updateDraft);
   }
 
   Future<Response> delete(Request request, String id) async {
-    final uid = request.uid!;
-    final result = await draftService.delete(id, uid: uid);
-    if (result > 0) {
-      return Response(204);
+    try {
+      final uid = request.uid!;
+      final result = await draftService.delete(id, uid: uid);
+      if (result > 0) {
+        return Response(204);
+      }
+      return ResponseX.notFound();
+    } catch (e) {
+      log.severe('__error__', e);
+      return ResponseX.invalidRequest();
     }
-    return ResponseX.notFound();
   }
 }

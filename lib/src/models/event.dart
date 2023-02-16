@@ -3,6 +3,7 @@ import 'package:dapi_shelf_sample/src/common/utils/date_utils.dart';
 class Event {
   final String? id;
   final String? userId;
+  final String? draftId;
   // final DateTime? updateAt;
   final DateTime? startAt;
   final DateTime? startDate;
@@ -15,6 +16,7 @@ class Event {
   Event({
     this.id,
     this.userId,
+    this.draftId,
     // this.updateAt,
     this.startAt,
     this.startDate,
@@ -28,6 +30,7 @@ class Event {
   Event.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         userId = json['userId'],
+        draftId = json['draftId'],
         // updateAt = DateTime.parse(json['updateAt']),
         startAt = DateTime.parse(json['startAt']),
         startDate = DateTime.parse(json['startDate']),
@@ -40,6 +43,7 @@ class Event {
   Map<String, dynamic> toJson() => {
         'id': id,
         'userId': userId,
+        'draftId': draftId,
         // 'updateAt': updateAt?.formatDateTime(),
         'startAt': startAt?.formatDateTime(),
         'startDate': startDate?.formatDate(),

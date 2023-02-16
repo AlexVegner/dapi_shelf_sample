@@ -1,5 +1,4 @@
 import 'package:dapi_shelf_sample/dapi_shelf_sample.dart';
-import 'package:dapi_shelf_sample/src/common/log.dart';
 import 'package:postgres_pool/postgres_pool.dart';
 
 class PgClient {

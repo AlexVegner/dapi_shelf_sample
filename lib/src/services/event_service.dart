@@ -29,6 +29,7 @@ class EventService with PgTableWithUid<Event> {
   List<String> get fields => [
         'id',
         'user_id',
+        'draft_id',
         // 'update_at',
         'start_at',
         'start_date',
@@ -44,6 +45,7 @@ class EventService with PgTableWithUid<Event> {
     return Event(
       id: row[table]?['id'],
       userId: row[table]?["user_id"],
+      draftId: row[table]?["draft_id"],
       // updateAt: row[table]?['update_at'],
       startAt: row[table]?['start_at'],
       startDate: row[table]?['start_date'],
@@ -59,6 +61,7 @@ class EventService with PgTableWithUid<Event> {
     return {
       'id': doc.id,
       'user_id': doc.userId,
+      'draft_id': doc.draftId,
       // 'update_at': doc.updateAt,
       'start_at': doc.startAt,
       'start_date': doc.startDate,

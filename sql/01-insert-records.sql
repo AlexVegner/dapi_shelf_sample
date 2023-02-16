@@ -19,3 +19,6 @@ VALUES((select id from users limit 1), '2022-07-03', '2022-07-03 19:10:25','2022
 
 INSERT INTO drafts (user_id, start_date, start_at, end_date, days, duration, title, detail) 
 VALUES((select id from users limit 1), '2022-07-03', '2022-07-03 18:00:00','2022-08-03', 0, 60, 'Task2', 'details');
+
+
+SELECT * from events
