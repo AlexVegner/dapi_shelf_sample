@@ -15,7 +15,7 @@ ssh-keygen -t rsa -f ~/.ssh/daylog_rsa -C ${USERNAME} -b 2048
 ssh-add ~/.ssh/daylog_rsa
 ```
 
-4. Copy to clipboard
+4. Copy to clipboard add add it to vm 
 ```sh
 pbcopy < ~/.ssh/daylog_rsa.pub
 ```
@@ -27,7 +27,7 @@ pbcopy < ~/.ssh/daylog_rsa.pub
 
 6. Connect to ssh: 
 ```sh
-ssh ssh ${USERNAME}@${PUBLIC_IP} 
+ssh ${USERNAME}@${PUBLIC_IP}
 ```
 
 7. Install docker
