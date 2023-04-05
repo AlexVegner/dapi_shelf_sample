@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -6,22 +8,50 @@ import 'package:crypto/crypto.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:shelf/shelf.dart';
 
-Middleware handleCors() {
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
-    'Access-Control-Allow-Headers': 'Origin, Content-Type',
-  };
+const ORIGIN = 'origin';
+const ALLOW_ORIGIN = 'allow_origin';
+
+Middleware handleCors({List<String>? origins}) {
+  String? getAllowOrigin(String? origin) {
+    print(origin);
+    if (origins != null && origins.contains(origin)) {
+      return origin;
+    }
+    return null;
+  }
+
+  Map<String, Object> modifyCorsHeaders({
+    Map<String, Object>? headers,
+    required String origin,
+  }) {
+    return {
+      if (headers != null) ...headers,
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+      'Access-Control-Allow-Headers': 'Origin, Content-Type',
+    };
+  }
 
   return createMiddleware(
     requestHandler: (Request request) {
-      if (request.method == 'OPTIONS') {
-        return Response.ok('', headers: corsHeaders);
+      print(request.headers);
+      final origin = getAllowOrigin(request.headers[ORIGIN]);
+      if (origin != null) {
+        request.context[ALLOW_ORIGIN] = origin;
+        if (request.method == 'OPTIONS') {
+          return Response.ok('', headers: modifyCorsHeaders(origin: origin));
+        }
       }
       return null;
     },
     responseHandler: (Response response) {
-      return response.change(headers: corsHeaders);
+      final origin = response.context[ALLOW_ORIGIN] as String?;
+      if (origin == null) {
+        return response;
+      }
+      return response.change(
+          headers:
+              modifyCorsHeaders(headers: response.headers, origin: origin));
     },
   );
 }

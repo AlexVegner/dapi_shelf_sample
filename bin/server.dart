@@ -10,7 +10,7 @@ void main(List<String> arguments) async {
 
   final handler = Pipeline()
       .addMiddleware(logRequests())
-      .addMiddleware(handleCors())
+      .addMiddleware(handleCors(origins: ["http://localhost:8686"]))
       .addHandler(router);
 
   await serve(handler, hostName, port);
