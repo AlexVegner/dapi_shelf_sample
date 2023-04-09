@@ -11,50 +11,26 @@ import 'package:shelf/shelf.dart';
 const ORIGIN = 'origin';
 const ALLOW_ORIGIN = 'allow_origin';
 
-Middleware handleCors({List<String>? origins}) {
-  String? getAllowOrigin(String? origin) {
-    print(origin);
-    if (origins != null && origins.contains(origin)) {
-      return origin;
-    }
-    return null;
-  }
-
-  Map<String, Object> modifyCorsHeaders({
-    Map<String, Object>? headers,
-    required String origin,
-  }) {
-    return {
-      if (headers != null) ...headers,
-      'Access-Control-Allow-Origin': origin,
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
-      'Access-Control-Allow-Headers': 'Origin, Content-Type',
-    };
-  }
-
-  return createMiddleware(
-    requestHandler: (Request request) {
-      print(request.headers);
-      final origin = getAllowOrigin(request.headers[ORIGIN]);
-      if (origin != null) {
-        request.context[ALLOW_ORIGIN] = origin;
-        if (request.method == 'OPTIONS') {
-          return Response.ok('', headers: modifyCorsHeaders(origin: origin));
+Middleware handleCors({List<String>? origins}) => (Handler next) {
+      return (request) async {
+        final origin = _getAllowOrigin(origins, request.headers[ORIGIN]);
+        if (origin != null) {
+          if (request.method == 'OPTIONS') {
+            return Response.ok('', headers: _modifyCorsHeaders(origin: origin));
+          }
         }
-      }
-      return null;
-    },
-    responseHandler: (Response response) {
-      final origin = response.context[ALLOW_ORIGIN] as String?;
-      if (origin == null) {
+        var response = await next(request);
+        if (origin != null) {
+          return response.change(
+            headers: _modifyCorsHeaders(
+              headers: response.headers,
+              origin: origin,
+            ),
+          );
+        }
         return response;
-      }
-      return response.change(
-          headers:
-              modifyCorsHeaders(headers: response.headers, origin: origin));
-    },
-  );
-}
+      };
+    };
 
 String generateSalt([int length = 32]) {
   final rand = Random.secure();
@@ -125,3 +101,24 @@ Handler fallback(String indexPath) => (Request request) {
       final indexFile = File(indexPath).readAsStringSync();
       return Response.ok(indexFile, headers: {'content-type': 'text/html'});
     };
+
+Map<String, Object> _modifyCorsHeaders({
+  Map<String, Object>? headers,
+  required String origin,
+}) {
+  return {
+    if (headers != null) ...headers,
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+    'Access-Control-Allow-Headers':
+        'Origin, Content-Type, Accept, Authorization',
+  };
+}
+
+String? _getAllowOrigin(List<String>? allowedOrigins, String? origin) {
+  print(origin);
+  if (allowedOrigins != null && allowedOrigins.contains(origin)) {
+    return origin;
+  }
+  return null;
+}
